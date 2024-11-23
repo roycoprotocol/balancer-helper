@@ -14,7 +14,7 @@ contract BalancerSwapHelper {
     bytes32 constant POOL_ID = 0x8353157092ed8be69a9df8f95af097bbf33cb2af0000000000000000000005d9;
     IVault constant VAULT = IVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
 
-    uint256 constant MAX_SLIPPAGE = .995e18;
+    uint256 constant MAX_SLIPPAGE = .998e18;
     
     /// @dev approve first, returns tokens directly to wallet
     function helpSwap(address payable wallet, uint256 amount) public returns (uint256 amountOut) {
