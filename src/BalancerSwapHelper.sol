@@ -32,7 +32,7 @@ contract BalancerSwapHelper {
         IVault.FundManagement memory funds = IVault.FundManagement({
             sender: address(this),
             fromInternalBalance: false,
-            recipient: owner,
+            recipient: wallet,
             toInternalBalance: false
         });
 
