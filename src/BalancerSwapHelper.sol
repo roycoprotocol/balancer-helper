@@ -3,9 +3,10 @@ pragma solidity ^0.8.13;
 
 import {IVault} from "lib/balancer-v2-monorepo/pkg/interfaces/contracts/vault/IVault.sol";
 import {IERC20} from "lib/forge-std/src/interfaces/IERC20.sol";
-import {FixedPointMathLib} from "lib/
+import {FixedPointMathLib} from "lib/solmate/src/utils/FixedPointMathLib.sol"
 
 contract BalancerSwapHelper {
+    uising FixedPointMathLib for uint256;
 
     address constant USDC = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
     address constant GHO = 0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f;
@@ -35,11 +36,9 @@ contract BalancerSwapHelper {
             toInternalBalance: false
         });
 
-        uint256 limit = 
+        uint256 limit = amount.mulWadDown(MAX_SLIPPAGE);
+        uint256 deadline = type(uint256).max;
 
-        IVault.swap(swap, funds, )
-        
-        // VAULT.swap(swap, FundManagement({sender: owner, recipient: wallet, fromInternalBalance: false, toInternalBalance: false}), amount, block.timestamp);
-        // IVault(VAULT).approve(POOL, amount);
+        IVault.swap(swap, funds, limit, deadline);
     }
 }
