@@ -11,13 +11,14 @@ contract BalancerSwapHelper {
 
     address constant USDC = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
     address constant GHO = 0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f;
-    bytes32 constant POOL_ID = 0x8353157092ed8be69a9df8f95af097bbf33cb2af0000000000000000000005d9;
+
     IVault constant VAULT = IVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
+    bytes32 constant POOL_ID = 0x8353157092ed8be69a9df8f95af097bbf33cb2af0000000000000000000005d9;
 
     uint256 constant MAX_SLIPPAGE = 0.998e18;
 
-    /// @notice Swaps USDC to GHO using Balancer V2 for the calling Weiroll Wallet.
-    /// @dev Approve amount of USDC to swap (fill amount) before executing this function.
+    /// @notice Swaps USDC to GHO using Balancer V2 for the calling Weiroll Wallet on ETH Mainnet.
+    /// @dev The Weiroll Wallet must approve amount of USDC to swap (fill amount) before executing this function.
     /// @dev Returns GHO tokens directly to the Weiroll Wallet.
     function helpSwap() public returns (uint256 amountOut) {
         // Get user's fill amount directly from the Weiroll Wallet
