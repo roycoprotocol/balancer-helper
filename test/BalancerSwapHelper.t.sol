@@ -41,7 +41,7 @@ contract BalancerSwapHelperTest is Test {
         uint256 usdcBalanceBefore = IERC20(USDC).balanceOf(weirollWallet);
 
         // Execute swap
-        uint256 amountOut = helper.helpSwap();
+        uint256 amountOut = helper.helpSwap(amount);
 
         uint256 ghoBalanceAfter = IERC20(GHO).balanceOf(weirollWallet);
         uint256 usdcBalanceAfter = IERC20(USDC).balanceOf(weirollWallet);
@@ -54,10 +54,12 @@ contract BalancerSwapHelperTest is Test {
         vm.stopPrank();
     }
 
-    function testFailInsufficientAllowance() public {
+    function testFailInsufficientAllowance(uint256 amount) public {
+        amount = bound(amount, 1e6, 1_000_000e6);
+
         // Try to swap without approval
         vm.prank(weirollWallet);
-        helper.helpSwap();
+        helper.helpSwap(amount);
     }
 
     function testFailInsufficientBalance() public {
@@ -67,7 +69,7 @@ contract BalancerSwapHelperTest is Test {
         IERC20(USDC).approve(address(helper), amount);
 
         // Try to swap more than weirollWallet's balance
-        helper.helpSwap();
+        helper.helpSwap(amount);
         vm.stopPrank();
     }
 }
