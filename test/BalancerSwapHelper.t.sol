@@ -12,6 +12,7 @@ contract BalancerSwapHelperTest is Test {
 
     address constant USDC = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
     address constant GHO = 0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f;
+    address constant STKGHO = 0x1a88Df1cFe15Af22B3c4c783D4e6F7F9e0C1885d;
 
     BalancerSwapHelper helper;
     address weirollWalletImplementation;
@@ -72,4 +73,31 @@ contract BalancerSwapHelperTest is Test {
         helper.helpSwap(amount);
         vm.stopPrank();
     }
+
+    function testFailSlippage(uint256 amount) public {
+        amount = bound(amount, 10_000_000e6, 100_000_000e6);
+
+        weirollWallet = weirollWalletImplementation.clone(abi.encodePacked(address(0xbeef), address(this), amount, uint256(0), false, bytes32(0)));
+
+        // Fund the Weiroll Wallet with the fuzzed amount
+        deal(USDC, weirollWallet, amount);
+
+        // Impersonate the Weiroll Wallet and approve helper
+        vm.startPrank(weirollWallet);
+        IERC20(USDC).approve(address(helper), amount);
+
+        uint256 ghoBalanceBefore = IERC20(GHO).balanceOf(weirollWallet);
+        uint256 usdcBalanceBefore = IERC20(USDC).balanceOf(weirollWallet);
+
+        // Execute swap
+        uint256 amountOut = helper.helpSwap(amount);
+
+        uint256 ghoBalanceAfter = IERC20(GHO).balanceOf(weirollWallet);
+        uint256 usdcBalanceAfter = IERC20(USDC).balanceOf(weirollWallet);
+
+        vm.assume(amountOut < amount * helper.MIN_GHO_PER_USDC() * (10 ** (18 - 6)));
+
+        vm.stopPrank();
+    }
+
 }

@@ -16,7 +16,7 @@ contract BalancerSwapHelper {
     IVault constant VAULT = IVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
     bytes32 constant POOL_ID = 0x8353157092ed8be69a9df8f95af097bbf33cb2af0000000000000000000005d9;
 
-    uint256 constant MAX_SLIPPAGE = 0.998e18;
+    uint256 constant public MIN_GHO_PER_USDC = 0.999e18;
 
     /// @notice Swaps USDC to GHO using Balancer V2 for the calling Weiroll Wallet on ETH Mainnet.
     /// @dev The Weiroll Wallet must approve amount of USDC to swap (fill amount) before executing this function.
@@ -47,7 +47,7 @@ contract BalancerSwapHelper {
         });
 
         // Amount of GHO tokens that must be received from swap based on max slippage
-        uint256 limit = amount.mulWadDown(MAX_SLIPPAGE).mulWadDown(10 ** DECIMALS_DIFFERENCE);
+        uint256 limit = amount.mulWadDown(MIN_GHO_PER_USDC) * (10 ** DECIMALS_DIFFERENCE);
         // Enforce atomicity for the swap
         uint256 deadline = block.timestamp;
 
